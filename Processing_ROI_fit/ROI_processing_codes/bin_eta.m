@@ -2,7 +2,7 @@
 % Function Name: bin_eta.m
 %
 % Description:
-%   This function bins the eta values into quantile-based categories and 
+%   This function bins the eta values into quantile-based categories and
 %   visualizes them using the 4polar3D stick plot.
 %
 %   The function:
@@ -12,7 +12,7 @@
 %     - Visualizes the result using the create_single_4Psticks_image function.
 %
 % Instructions:
-%   - Call this function with the eta array, ROI indices, the input image, 
+%   - Call this function with the eta array, ROI indices, the input image,
 %     coordinate and display parameters.
 %   - The function automatically bins eta and updates the stick colors accordingly.
 %
