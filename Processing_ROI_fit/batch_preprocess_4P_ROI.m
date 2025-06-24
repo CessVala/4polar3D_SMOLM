@@ -16,20 +16,20 @@
 clear all
 
 % Load matrix (K)
-load('C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\Charitra\temp\K_matrix.mat');
+load('C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\demo procesing\K_matrix.mat');
 K = K_final;
 
 % Define input directory containing 4x4 files
-hdir = 'C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\Charitra\temp\tirf_561cube(00000)\4x4';
+hdir = 'C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\demo procesing\New folder';
 
 % List all *_4x4_New.mat files
 flist = dir([hdir '\*_4x4_New.mat']);
-
+sdir = [hdir];
 % Define output directory for fitted results
-sdir = [hdir '\fit_results'];
-if ~isfolder(sdir)
-    mkdir(sdir) % Create folder if it doesn't exist
-end
+% sdir = [hdir '\fit_results'];
+% if ~isfolder(sdir)
+%      mkdir(sdir)
+% end
 
 str_4 = '_4x4_New'; % Identifier string for raw input files
 
@@ -48,9 +48,12 @@ str_f = 'fit_results';
 flist = dir([hdir '\*_4x4_New.mat']);
 list_fit_res = dir([sdir '\*' str_f '.mat']);
 
+
 % Set constants
-px_size = 0.130;          % Microns per pixel
+g_sig   = 0.020;
+px_size = 0.130;          % in microns
 img_px  = 2^11;           % Output image size in pixels
+
 
 % Process each file again
 for k = 1:numel(flist)
@@ -117,7 +120,8 @@ for k = 1:numel(flist)
     img_struct.bn_size = bn_size;
 
     % Save image structure
-    sname = fullfile(list_fit_res(k).folder, strrep(list_fit_res(k).name, str_f, 'images'));
+    sname = fullfile(list_fit_res(k).folder, ...
+		strrep(list_fit_res(k).name, str_f, 'images'));
     save(sname, 'img_struct', '-v7.3')
 end
 
@@ -125,11 +129,11 @@ end
 clear all
 
 % Reload K matrix
-load('C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\Charitra\temp\K_matrix.mat');
+load('C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\demo procesing\K_matrix.mat');
 K = K_final;
 
 % Define paths
-data_dir = 'C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\Charitra\temp\tirf_561cube(00000)\4x4';
+data_dir = 'C:\Users\MOSAIC STORM 5\Documents\Temporary Directory for Processing\demo procesing\New folder';
 str_4 = '4x4_New';
 str_f = 'fit_results';
 str_i = 'images';
@@ -152,11 +156,11 @@ for k = 1:numel(files_list)
     fname = fullfile(files_list(k).folder, files_list(k).name)
     data = calc_4P_Polar_params_ISO(fname, K);
 
-    % Load fit results
+    % Load fit results from fit_4P_ISOmodel
     fname = fullfile(files_list(k).folder, strrep(files_list(k).name, str_4, str_f));
     load(fname);
 
-    % Load polarization images
+    % Load composite 4P orientation images
     fname = fullfile(files_list(k).folder, strrep(files_list(k).name, str_4, str_i));
     load(fname);
 
@@ -168,7 +172,10 @@ for k = 1:numel(files_list)
     data_struct.eta           = fit_results.eta(:,2);
     data_struct.delta         = fit_results.delta(:,2);
     data_struct.rmse          = fit_results.rmse(:,2);
-    data_struct.y_loc         = img_struct.y_loc;
+    data_struct.radius_mean     = old_data.radius_mean(:,1);
+    data_struct.radius_max      = old_data.radius_max(:,1);
+    data_struct.radius          = old_data.radius(:,:);
+    data_struct.y_loc         = img_struct.y_loc;  % x and y coordinates in real world measurements (micrometer)
     data_struct.x_loc         = img_struct.x_loc;
     data_struct.frame         = data.T;
     data_struct.I_tot         = data.It(:,1) * count2ph;
