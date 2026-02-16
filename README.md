@@ -8,7 +8,7 @@
 
 
 ## Overview  
-**4polar3D_SMOLM** is a MATLAB-based toolkit for the analysis of **4polar3D microscopy datasets using polarized projection imaging.**  
+**4polar3D_SMOLM** is a MATLAB-based toolkit for the analysis of **4polar3D microscopy datasets using polarized imaging.**  
 It enables **preprocessing, polarized projection alignment, and trajectory coupling** to study **molecular orientation in complex biological samples.**
 
 ---
